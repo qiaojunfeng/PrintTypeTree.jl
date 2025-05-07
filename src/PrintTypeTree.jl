@@ -44,12 +44,25 @@ function get_subtypes_nodes(T::Type; onelevel=false)
 end
 
 """
+    typetree(io=stdout, T)
+
 Print type hierarchy tree.
+
+For a type `T`, print
+- all the subtypes of `T`, recursively
+- the supertypes of `T` until `Any`
+- except the branch of `T`, the type tree of the children of the supertypes are
+    folded, but annotated with a visual cue of `(n children)` for those
+    having n > 0 children
+- the children of `Any` are hidden, and annotated with `(other children are hidden)`,
+    to avoid printing too many types
+- the type `T` is highlighted in red
 
 # Examples
 ```julia
 julia> using PrintTypeTree
-julia> typetree(Number)
+julia> typetree(Integer)
+julia> # Note that the `Integer` will be highlighted in red
 Any (other children are hidden)
 └─ Number
    ├─ Base.MultiplicativeInverses.MultiplicativeInverse (2 children)
@@ -74,7 +87,7 @@ Any (other children are hidden)
       │     └─ UInt8
       └─ Rational
 """
-function typetree(T::Type)
+function typetree(io::IO, T::Type)
     # subtypes tree
     tree = TypeTreeNode(T, get_subtypes_nodes(T), :red)
 
@@ -94,7 +107,9 @@ function typetree(T::Type)
         tree = TypeTreeNode(sup, sub)
     end
 
-    print_tree(tree)
+    print_tree(io, tree)
 end
+
+typetree(T::Type) = typetree(stdout, T)
 
 end
