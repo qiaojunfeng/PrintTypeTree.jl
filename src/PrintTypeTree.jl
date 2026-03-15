@@ -102,7 +102,11 @@ function typetree(io::IO, T::Type)
         end
         # only show one level of subtypes of parent
         sub = get_subtypes_nodes(sup; onelevel=true)
-        i = findfirst(x -> x.value == tree.value, sub)
+        # Use `<:` instead of `==` to handle type aliases: e.g. `supertype` may
+        # return a constrained UnionAll like `AbstractSparseMatrix{Tv,Ti} where
+        # {Tv,Ti<:Integer}` whose `==`-unequal alias `AbstractSparseMatrix`
+        # appears in `subtypes(sup)`. Subtype comparison correctly matches it.
+        i = findfirst(x -> tree.value <: x.value, sub)
         sub[i] = tree
         tree = TypeTreeNode(sup, sub)
     end
