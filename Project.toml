@@ -1,7 +1,7 @@
 name = "PrintTypeTree"
 uuid = "03751d76-14c6-4844-8d34-798a6a45b277"
 authors = ["Junfeng Qiao <qiaojunfeng@outlook.com> and contributors"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
